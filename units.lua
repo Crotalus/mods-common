@@ -33,7 +33,7 @@ local function UpdateCache()
             table.insert(cached, u)
 
             local focus = u:GetFocus()
-            if focus and not focus:IsDead() then
+            if focus and not focus:IsDead() and EntityCategoryContains(categories.ENGINEER, u) then
                 local focus_id = focus:GetEntityId()
                 if not assisting[focus_id] then
                     assisting[focus_id] = {engineers={}, build_rate=0}
