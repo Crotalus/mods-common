@@ -15,11 +15,6 @@ function UpdateUnits()
         UISelectionByCategory("ALLUNITS", false, false, false, false)
         for _, u in GetSelectedUnits() or {} do
             units[u:GetEntityId()] = u
-            local focus = u:GetFocus()
-            if focus and not focus:IsDead() then
-                local focus_id = focus:GetEntityId()
-                units[focus_id] = focus
-            end
         end
     end)
 end
@@ -33,13 +28,22 @@ local function UpdateCache()
             table.insert(cached, u)
 
             local focus = u:GetFocus()
-            if focus and not focus:IsDead() and EntityCategoryContains(categories.ENGINEER, u) then
+            if focus and not focus:IsDead() then
                 local focus_id = focus:GetEntityId()
-                if not assisting[focus_id] then
-                    assisting[focus_id] = {engineers={}, build_rate=0}
+                local focus_id = focus:GetEntityId()
+                if not units[focus_id] then
+                    units[focus_id] = focus
+                    table.insert(cached, focus)
                 end
-                table.insert(assisting[focus_id]['engineers'], u)
-                assisting[focus_id]['build_rate'] = assisting[focus_id]['build_rate'] + u:GetBuildRate()
+
+                if EntityCategoryContains(categories.ENGINEER, u) then
+                    if not assisting[focus_id] then
+                        assisting[focus_id] = {engineers={}, build_rate=0}
+                    end
+
+                    table.insert(assisting[focus_id]['engineers'], u)
+                    assisting[focus_id]['build_rate'] = assisting[focus_id]['build_rate'] + u:GetBuildRate()
+                end
             end
         end
     end
@@ -58,7 +62,7 @@ local function CheckCache()
             current_army = army
         end
 
-        if current_tick - 50 > last_reset and score[army].general.currentunits.count > table.getsize(units) then
+        if current_tick - 50 > last_reset and score[army].general.currentunits.count > table.getsize(cached) then
             UpdateUnits()
             last_reset = current_tick
         end
