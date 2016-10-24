@@ -1,5 +1,5 @@
 name = "Common Mod Tools"
-uid = "zcbf6277-24e3-437a-b968-Common-v1"
+uid = "zcbf6277-24e3-437a-b968-Common-v2"
 version = 1
 copyright = "Crotalus"
 description = "Common ModTools v1"
@@ -12,6 +12,7 @@ ui_only = true
 requires = {}
 requiresNames = {}
 conflicts = {
+"zcbf6277-24e3-437a-b968-Common-v1",
 "ecbf6277-24e3-437a-b968-EcoManager-v4",
 "ecbf6277-24e3-437a-b968-75e7e7c67db9",
 "21188cdf-ec69-43bd-b756-6140a84c0197",
