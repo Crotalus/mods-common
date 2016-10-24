@@ -30,7 +30,6 @@ local function UpdateCache()
             local focus = u:GetFocus()
             if focus and not focus:IsDead() then
                 local focus_id = focus:GetEntityId()
-                local focus_id = focus:GetEntityId()
                 if not units[focus_id] then
                     units[focus_id] = focus
                     table.insert(cached, focus)
@@ -51,18 +50,20 @@ end
 
 local function CheckCache()
     local current_tick = GameTick()
+    local army = GetFocusArmy()
 
-    if current_tick - 10 >= last_cached then
-        local army = GetFocusArmy()
+    if army ~= current_army then
+        last_cached = 0
+        last_reset = 0
+        current_army = army
+        cached = {}
+    end
+
+    if army ~= -1 and current_tick - 10 >= last_cached then
         local score = Score.Get()
+        local n = score[army].general.currentunits.count
 
-        if army ~= current_army then
-            last_cached = 0
-            last_reset = 0
-            current_army = army
-        end
-
-        if current_tick - 50 > last_reset and score[army].general.currentunits.count > table.getsize(cached) then
+        if current_tick - 50 > last_reset and (not n or n > table.getsize(cached)) then
             UpdateUnits()
             last_reset = current_tick
         end
