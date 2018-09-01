@@ -44,6 +44,8 @@ local function UpdateCache()
                     assisting[focus_id]['build_rate'] = assisting[focus_id]['build_rate'] + u:GetBuildRate()
                 end
             end
+        else
+            units[id] = nil
         end
     end
 end
